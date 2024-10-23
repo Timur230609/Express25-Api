@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
 # Create your models here.
 
 
@@ -13,10 +12,10 @@ class Order(models.Model):
         ('cancelled', 'Cancelled'),
     ]
 
-    customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')  
-    courier = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='courier_orders') 
+    customer = models.ForeignKey("account.User", on_delete=models.CASCADE, related_name='orders')  
+    courier = models.ForeignKey("account.User", on_delete=models.SET_NULL, null=True, related_name='courier_orders') 
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending') 
-    created_at = models.DateTimeField(auto_now_add=True)  
+    created_at = models.DateTimeField(auto_now=True)  
     updated_at = models.DateTimeField(auto_now=True) 
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
 
@@ -33,7 +32,7 @@ from django.db import models
 
 class ProductOrder(models.Model):
     order = models.ForeignKey('Order', on_delete=models.CASCADE, related_name='product_orders')  
-    product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='product_orders') 
+    product = models.ForeignKey('store.Product', on_delete=models.CASCADE, related_name='product_orders') 
     quantity = models.PositiveIntegerField()  
 
     def __str__(self):

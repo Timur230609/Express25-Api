@@ -6,8 +6,8 @@ from django.utils.translation import gettext_lazy as _
 from datetime import datetime
 
 class PlasticCard(models.Model):
-    user = models.ForeignKey("account.User", on_delete=models.CASCADE, verbose_name="plastic_cards")
-    card_number = models.CharField(max_length=16)  # 16-digit card number
+    user = models.ForeignKey("account.User", on_delete=models.CASCADE, related_name=_("plastic_cards"))
+    card_number = models.CharField(_('card_number'),max_length=16)  # 16-digit card number
     expiration_date = models.CharField(max_length=5)  # Format: MM/YY
     is_active = models.BooleanField(default=True)
 
