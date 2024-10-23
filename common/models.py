@@ -1,18 +1,13 @@
-from django.db import models 
-from django.utils.translation import gettext_lazy as _
-
-
-from django.db import models
-# from account.models import CustomUser
 
 from django.db import models
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from datetime import datetime
+# from account.models import CustomUser
 
 class PlasticCart(models.Model):
-    
+
     # user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     card_number = models.CharField(max_length=16)  # 16-digit card number
     expiration_date = models.CharField(max_length=5)  # Format: MM/YY
