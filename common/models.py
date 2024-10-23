@@ -4,18 +4,16 @@ from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from datetime import datetime
-# from account.models import CustomUser
 
-class PlasticCart(models.Model):
-
-    # user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+class PlasticCard(models.Model):
+    user = models.ForeignKey("account.User", on_delete=models.CASCADE, verbose_name="plastic_cards")
     card_number = models.CharField(max_length=16)  # 16-digit card number
     expiration_date = models.CharField(max_length=5)  # Format: MM/YY
     is_active = models.BooleanField(default=True)
 
     class Meta:
-        verbose_name = _("PlasticCart")
-        verbose_name_plural = _("PlasticCarts")
+        verbose_name = _("PlasticCard")
+        verbose_name_plural = _("PlasticCards")
 
     def __str__(self):
         return str(self.card_number)
@@ -44,14 +42,14 @@ class PlasticCart(models.Model):
 
 
 class Address(models.Model):
-    # user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    label = models.CharField(max_length=100)
-    long = models.DecimalField(max_digits=8, decimal_places=3)
+    user = models.ForeignKey("account.User", on_delete=models.CASCADE,related_name="addresses")
+    label = models.CharField(max_length=200)
+    long = models.DecimalField(max_digits=8, decimal_places=3, blank=True, null=True)
     lat = models.DecimalField(max_digits=8, decimal_places=3, blank=True, null=True)
     city = models.CharField(max_length=35, blank=True, null=True)
     district = models.CharField(max_length=100, blank=True, null=True)
     street_address = models.CharField(max_length=150, blank=True, null=True)
-    postal_code = models.CharField(max_length=100)
+    postal_code = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
         verbose_name = _("Address")
