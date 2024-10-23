@@ -40,7 +40,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_courier = models.BooleanField(default=False)
     gender = models.CharField(max_length=10, choices=[('M', 'Male'), ('F', 'Female')], default='F')
     birth_date = models.DateField(null=True, blank=True)
-    address = models.CharField(max_length=250)
 
     is_staff = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
