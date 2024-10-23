@@ -24,6 +24,8 @@ class Order(models.Model):
         return f"Order {self.id} by {self.customer.username}"
 
     class Meta:
+        verbose_name = "Order"
+        verbose_name_plural = "Orders"
         ordering = ['-created_at'] 
 
 
@@ -38,6 +40,8 @@ class ProductOrder(models.Model):
         return f"{self.quantity} x {self.product.name} in order {self.order.id}"
 
     class Meta:
+        verbose_name = "ProductOrder"
+        verbose_name_plural = "ProductOrders"
         unique_together = ('order', 'product') 
 
 
@@ -67,3 +71,5 @@ class Payment(models.Model):
 
     class Meta:
         ordering = ['-created_at'] 
+        verbose_name = "Payment"
+        verbose_name_plural = "Payments"
