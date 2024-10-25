@@ -9,7 +9,7 @@ class Order(models.Model):
         ('processing', 'Processing'),
         ('completed', 'Completed'),
         ('cancelled', 'Cancelled'),
-    ]`
+    ]
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
     courier = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='courier_orders')
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
