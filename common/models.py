@@ -1,46 +1,59 @@
-from django.db import models 
 
-# Create your models here.
-
-
-# class BaseModel(models.Model):
-#     created_at = models.DateTimeField("created at", auto_now_add=True)
-#     updated_at = models.DateTimeField("updated at", auto_now=True)
-#     created_by = models.ForeignKey(
-#         settings.AUTH_USER_MODEL,
-#         on_delete=models.SET_NULL,
-#         null=True,
-#         related_name="%(class)s_createdby",
-#         editable=False,
-#     )
-#     modified_by = models.ForeignKey(
-#         settings.AUTH_USER_MODEL,
-#         on_delete=models.SET_NULL,
-#         related_name="%(class)s_modifiedby",
-#         null=True,
-#         blank=True,
-#         editable=False,
-#     )
-
-#     class Meta:
-#         abstract = True
-
-#     def save(self, *args, **kwargs):
-#         if hasattr(self, "slug") and hasattr(self, "title"):
-#             if not self.slug:
-#                 self.slug = generate_unique_slug(self.__class__, self.title)
-
-#         if hasattr(self, "slug") and hasattr(self, "name"):
-#             if not self.slug:
-#                 self.slug = generate_unique_slug(self.__class__, self.name)
-#         super().save(*args, **kwargs)
-
-
-# Muhammadjon, Boborahim, Norbek
+from django.db import models
+from django.utils import timezone
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
+from datetime import datetime
 
 class PlasticCard(models.Model):
-    pass
+    user = models.ForeignKey("account.User", on_delete=models.CASCADE, related_name=_("plastic_cards"))
+    card_number = models.CharField(_('card_number'),max_length=16)  # 16-digit card number
+    expiration_date = models.CharField(max_length=5)  # Format: MM/YY
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = _("PlasticCard")
+        verbose_name_plural = _("PlasticCards")
+
+    def __str__(self):
+        return str(self.card_number)
+
+    # Custom validation for card number length
+    def clean(self):
+        if not self.card_number.isdigit() or len(self.card_number) != 16:
+            raise ValidationError(_("Card number must be a valid 16-digit number."))
+
+        # Checking expiration date format MM/YY and validity
+        try:
+            expiration = datetime.strptime(self.expiration_date, "%m/%y")
+        except ValueError:
+            raise ValidationError(_("Expiration date must be in MM/YY format."))
+
+        # Deactivate the card if the expiration date has passed
+        if expiration < datetime.now():
+            self.is_active = False
+
+    def save(self, *args, **kwargs):
+        # Perform custom validation before saving
+        self.clean()
+        super().save(*args, **kwargs)
+
+    
 
 
 class Address(models.Model):
-    pass
+    user = models.ForeignKey("account.User", on_delete=models.CASCADE,related_name="addresses")
+    label = models.CharField(max_length=200)
+    long = models.DecimalField(max_digits=8, decimal_places=3, blank=True, null=True)
+    lat = models.DecimalField(max_digits=8, decimal_places=3, blank=True, null=True)
+    city = models.CharField(max_length=35, blank=True, null=True)
+    district = models.CharField(max_length=100, blank=True, null=True)
+    street_address = models.CharField(max_length=150, blank=True, null=True)
+    postal_code = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        verbose_name = _("Address")
+        verbose_name_plural = _("Addreses")
+    
+    def __str__(self):
+        return f"{self.user} from {self.city}"
