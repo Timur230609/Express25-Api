@@ -1,75 +1,101 @@
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.core.exceptions import ValidationError
-from django.core.validators import RegexValidator
-from django.db import models
+from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
+from django.utils.translation import gettext_lazy as _
 
 class Category(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField()
-    address = models.ForeignKey("common.Address", on_delete=models.CASCADE, related_name="categories")
-    phone_number = models.CharField(max_length=13)  # clean
-    rating = models.FloatField()
-    image = models.ImageField(upload_to='category_images/')
-    delivery_time = models.DateField()
-    working_time = models.DateField()
-    category_type = models.CharField(max_length=255)
+    name = models.CharField(_("Nomi"), max_length=255)
+    description = models.TextField(_("Tavsif"), blank=True, null=True)
+    address = models.ForeignKey(
+        "common.Address", 
+        on_delete=models.CASCADE, 
+        related_name="categories",
+        verbose_name=_("Manzil")
+    )
+    phone_number = models.CharField(
+        _("Telefon raqam"),
+        max_length=13,
+        validators=[
+            RegexValidator(
+                regex=r'^\+?1?\d{9,12}$', 
+                message=_("Telefon raqam formati '+999999999' bo'lishi va 12 ta raqamdan oshmasligi kerak.")
+            )
+        ]
+    )
+    rating = models.FloatField(
+        _("Reyting"),
+        validators=[MinValueValidator(0), MaxValueValidator(5)],
+        help_text=_("Reyting 0 va 5 orasida bo'lishi kerak.")
+    )
+    image = models.ImageField(_("Rasm"), upload_to='category_images/', blank=True, null=True)
+    delivery_time = models.DurationField(_("Yetkazib berish vaqti"))
+    working_time = models.TimeField(_("Ish vaqti"))
+    category_type = models.CharField(_("Kategoriya turi"), max_length=255)
 
     class Meta:
-        verbose_name = 'Category'
-        verbose_name_plural = 'Categories'
+        verbose_name = _("Kategoriya")
+        verbose_name_plural = _("Kategoriyalar")
 
     def clean(self):
-        # Check rating
+        super().clean()
+        # Validate rating range
         if self.rating < 0 or self.rating > 5:
-            raise ValidationError("Rating must be between 0 and 5.")
-        
-        # Validate phone number format
-        phone_validator = RegexValidator(regex=r'^\+?1?\d{9,12}$', message="Phone number must be in the format '+999999999' and up to 12 digits.")
-        phone_validator(self.phone_number)
+            raise ValidationError(_("Reyting 0 va 5 orasida bo'lishi kerak."))
 
     def __str__(self):
         return self.name
 
 
-
-# Subcategory Model
 class Subcategory(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField()
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='subcategory_images/')
+    name = models.CharField(_("Nomi"), max_length=255)
+    description = models.TextField(_("Tavsif"), blank=True, null=True)
+    category = models.ForeignKey(
+        Category, 
+        on_delete=models.CASCADE, 
+        verbose_name=_("Kategoriya")
+    )
+    image = models.ImageField(_("Rasm"), upload_to='subcategory_images/', blank=True, null=True)
 
     class Meta:
-        verbose_name = 'Subcategory'
-        verbose_name_plural = 'Subcategories'
+        verbose_name = _("Subkategoriya")
+        verbose_name_plural = _("Subkategoriyalar")
 
     def clean(self):
+        super().clean()
         if not self.category:
-            raise ValidationError("Subcategory must belong to a Category.")
+            raise ValidationError(_("Subkategoriya kategoriyaga tegishli bo'lishi kerak."))
 
     def __str__(self):
         return self.name
 
 
-# Product Model
 class Product(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='product_images/')
-    stock = models.PositiveIntegerField()  
+    name = models.CharField(_("Nomi"), max_length=255)
+    description = models.TextField(_("Tavsif"), blank=True, null=True)
+    price = models.DecimalField(
+        _("Narxi"), 
+        max_digits=10, 
+        decimal_places=2, 
+        validators=[MinValueValidator(0.01)]
+    )
+    subcategory = models.ForeignKey(
+        Subcategory, 
+        on_delete=models.CASCADE, 
+        verbose_name=_("Subkategoriya")
+    )
+    image = models.ImageField(_("Rasm"), upload_to='product_images/', blank=True, null=True)
+    stock = models.PositiveIntegerField(_("Soni"), default=0)
 
     class Meta:
-        verbose_name = 'Product'
-        verbose_name_plural = 'Products'
+        verbose_name = _("Mahsulot")
+        verbose_name_plural = _("Mahsulotlar")
 
     def clean(self):
+        super().clean()
         if self.price <= 0:
-            raise ValidationError("Price must be greater than 0.")
+            raise ValidationError(_("Narx 0 dan katta bo'lishi kerak."))
         if self.stock < 0:
-            raise ValidationError("Stock cannot be negative.")
+            raise ValidationError(_("Soni manfiy bo'lishi mumkin emas."))
 
     def __str__(self):
         return self.name
