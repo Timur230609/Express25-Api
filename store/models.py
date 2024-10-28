@@ -26,7 +26,8 @@ class Category(models.Model):
     rating = models.FloatField(
         _("Reyting"),
         validators=[MinValueValidator(0), MaxValueValidator(5)],
-        help_text=_("Reyting 0 va 5 orasida bo'lishi kerak.")
+        help_text=_("Reyting 0 va 5 orasida bo'lishi kerak."),
+        default=3
     )
     image = models.ImageField(_("Rasm"), upload_to='category_images/', blank=True, null=True)
     delivery_time = models.DurationField(_("Yetkazib berish vaqti"))

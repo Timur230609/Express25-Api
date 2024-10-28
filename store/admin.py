@@ -7,7 +7,7 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'category_type', 'phone_number', 'rating')
     search_fields = ('name', 'category_type')
     list_filter = ('category_type', 'rating')
-
+    readonly_fields = ('rating',)
 
 # Subcategory Admin
 @admin.register(Subcategory)
