@@ -4,6 +4,7 @@ from django.core.validators import RegexValidator, MinValueValidator, MaxValueVa
 from django.utils.translation import gettext_lazy as _
 
 class Category(models.Model):
+    CATEGORY_TYPE = (('Store', 'Store'),('Restaurant','Restaurant'),)
     name = models.CharField(_("Nomi"), max_length=255)
     description = models.TextField(_("Tavsif"), blank=True, null=True)
     address = models.ForeignKey(
@@ -30,7 +31,7 @@ class Category(models.Model):
     image = models.ImageField(_("Rasm"), upload_to='category_images/', blank=True, null=True)
     delivery_time = models.DurationField(_("Yetkazib berish vaqti"))
     working_time = models.TimeField(_("Ish vaqti"))
-    category_type = models.CharField(_("Kategoriya turi"), max_length=255)
+    category_type = models.CharField(_("Kategoriya turi"), max_length=255,choices=CATEGORY_TYPE)
 
     class Meta:
         verbose_name = _("Kategoriya")
