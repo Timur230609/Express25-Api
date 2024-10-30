@@ -32,11 +32,11 @@ class Category(models.Model):
     image = models.ImageField(_("Rasm"), upload_to='category_images/', blank=True, null=True)
     delivery_time = models.DurationField(_("Yetkazib berish vaqti"))
     working_time = models.TimeField(_("Ish vaqti"))
-    category_type = models.CharField(_("Kategoriya turi"), max_length=255,choices=CATEGORY_TYPE)
+    category_type = models.CharField(_("Store turi"), max_length=255,choices=CATEGORY_TYPE)
 
     class Meta:
-        verbose_name = _("Kategoriya")
-        verbose_name_plural = _("Kategoriyalar")
+        verbose_name = _("Store")
+        verbose_name_plural = _("Stores")
 
     def clean(self):
         super().clean()
@@ -54,18 +54,18 @@ class Subcategory(models.Model):
     category = models.ForeignKey(
         Category, 
         on_delete=models.CASCADE, 
-        verbose_name=_("Kategoriya")
+        verbose_name=_("Store")
     )
     image = models.ImageField(_("Rasm"), upload_to='subcategory_images/', blank=True, null=True)
 
     class Meta:
-        verbose_name = _("Subkategoriya")
-        verbose_name_plural = _("Subkategoriyalar")
+        verbose_name = _("SubStore")
+        verbose_name_plural = _("SubStores")
 
     def clean(self):
         super().clean()
         if not self.category:
-            raise ValidationError(_("Subkategoriya kategoriyaga tegishli bo'lishi kerak."))
+            raise ValidationError(_("SubStore Storega tegishli bo'lishi kerak."))
 
     def __str__(self):
         return self.name
@@ -83,7 +83,7 @@ class Product(models.Model):
     subcategory = models.ForeignKey(
         Subcategory, 
         on_delete=models.CASCADE, 
-        verbose_name=_("Subkategoriya")
+        verbose_name=_("SubStore")
     )
     image = models.ImageField(_("Rasm"), upload_to='product_images/', blank=True, null=True)
     stock = models.PositiveIntegerField(_("Soni"), default=0)
