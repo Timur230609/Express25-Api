@@ -1,11 +1,8 @@
-from django.shortcuts import render
-from django.views import View
 from store.models import Category
-from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from store.serializers import StoreSerializer
-from rest_framework import status
+from rest_framework import status,generics
 
 # class StoreDetailView(View):
 
@@ -23,35 +20,41 @@ from rest_framework import status
     
 #     #delete, put, patch
 
-class StoreDetailView(APIView):
-
-    def get(self, request, id):
-        store = Category.objects.get(id=id,category_type='Store')
-        serializer = StoreSerializer(store)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
+class StoreDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = StoreSerializer
+    queryset = Category
+    lookup_field = 'id'
     
-    def delete(self, request, id, format=None):
-        store = Category.objects.get(id=id,category_type='Store')
-        store.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+# class StoreDetailView(APIView):
 
-    def put(self, request, id, format=None):
-        store = Category.objects.get(id=id,category_type='Store')
-        serializer = StoreSerializer(store, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def get(self, request, id):
+#         store = Category.objects.get(id=id,category_type='Store')
+#         serializer = StoreSerializer(store)
+#         return Response(data=serializer.data, status=status.HTTP_200_OK)
     
-    def patch(self, request, id, format=None):
-        store = Category.objects.get(id=id,category_type='Store')
-        serializer = StoreSerializer(store, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def delete(self, request, id, format=None):
+#         store = Category.objects.get(id=id,category_type='Store')
+#         store.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
+
+#     def put(self, request, id, format=None):
+#         store = Category.objects.get(id=id,category_type='Store')
+#         serializer = StoreSerializer(store, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+#     def patch(self, request, id, format=None):
+#         store = Category.objects.get(id=id,category_type='Store')
+#         serializer = StoreSerializer(store, data=request.data, partial=True)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     #delete, put, patch
+
 
     
 # class StoreListAPIView(View):
@@ -74,27 +77,30 @@ class StoreDetailView(APIView):
     
 #     #post
 
-class StoreListAPIView(APIView):
+# class StoreListAPIView(APIView):
 
-    def get(self, request):
-        stores = Category.objects.filter(category_type='Store')
-        serializer = StoreSerializer(stores, many=True)
+#     def get(self, request):
+#         stores = Category.objects.filter(category_type='Store')
+#         serializer = StoreSerializer(stores, many=True)
 
-        return Response(data=serializer.data,status=status.HTTP_200_OK)
+#         return Response(data=serializer.data,status=status.HTTP_200_OK)
     
 
-    def post(self, request, format=None):
-        serializer = StoreSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def post(self, request, format=None):
+#         serializer = StoreSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-    
     #post
 
+class StoreListAPIView(generics.ListCreateAPIView):
+    queryset = Category.objects.filter(category_type='Store')
+    serializer_class = StoreSerializer
 
-    
-    
+
+
+
 #postman
