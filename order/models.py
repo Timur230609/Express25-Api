@@ -1,5 +1,5 @@
 from django.db import models
-from account.models import User
+from accaunt.models import User
 
 from django.core.exceptions import ValidationError
 
