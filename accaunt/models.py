@@ -53,8 +53,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_superuser = models.BooleanField(default=False)
 
     objects = CustomUserManager()
-
-    USERNAME_FIELD = 'username'  
+    USERNAME_FIELD = 'phone_number'  
+    REQUIRED_FIELDS = ['username']   
     # REQUIRED_FIELDS = ['username'] 
 
     class Meta:
