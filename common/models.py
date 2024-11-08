@@ -34,6 +34,13 @@ class PlasticCard(models.Model):
             self.is_active = False
             raise ValidationError(_("Ushbu kartaning amal qilish muddati tugagan va uni ishlatib bo'lmaydi.")) 
 
+
+
+
+
+
+
+#salom
     def save(self, *args, **kwargs):
         # Perform custom validation before saving
         self.clean()
