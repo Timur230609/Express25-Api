@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import generics
+from rest_framework import generics,permissions
 from .serializers import AddressSerializer,PlasticCardSerializer
 from .models import Address,PlasticCard
 
@@ -23,3 +23,4 @@ class PlasticCardDetailView(generics.RetrieveUpdateDestroyAPIView):
 class PlasticCardListAPIView(generics.ListCreateAPIView):
     queryset = PlasticCard.objects.filter()
     serializer_class = PlasticCardSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
