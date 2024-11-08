@@ -24,3 +24,7 @@ class PlasticCardListAPIView(generics.ListCreateAPIView):
     queryset = PlasticCard.objects.filter()
     serializer_class = PlasticCardSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    
+
+
+    #grgrgrgr
