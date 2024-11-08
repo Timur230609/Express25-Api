@@ -4,6 +4,9 @@ from django.urls import path,include
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from accaunt.views import LogoutView,LoginView,RegisterView
+
+
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -20,10 +23,14 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/store/',include('store.urls'),name='store-api' ),
-    path('account/',include('accaunt.urls')),
+
     path('api/v1/delivery/',include('delivery.urls')),
-    path('auth/', include('dj_rest_auth.urls')),
-    path('auth/registration/', include('dj_rest_auth.registration.urls')),
+    path('api/auth/register/', RegisterView.as_view(), name='register'),
+    path('api/auth/login/', LoginView.as_view(), name='login'),
+    path('api/auth/logout/', LogoutView.as_view(), name='logout'),
+    path('api/auth/', include('dj_rest_auth.urls')),
+
+
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
