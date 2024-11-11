@@ -3,24 +3,39 @@ from rest_framework import serializers
 from .models import User
 
 class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
-
+    password1 = serializers.CharField(write_only=True)
+    password2 = serializers.CharField(write_only=True)
     class Meta:
         model = User
-        fields = ('email', 'phone_number', 'password', 'is_courier', 'gender', 'birth_date')
+        fields = ('email', 'phone_number', 'password1','password2', 'is_courier', 'gender', 'birth_date')
 
     def create(self, validated_data):
+        password = validated_data.get('password1')
         user = User.objects.create_user(
             email=validated_data.get('email'),
             phone_number=validated_data.get('phone_number'),
-            password=validated_data.get('password'),
+            password=password,
             is_courier=validated_data.get('is_courier', False),
             gender=validated_data.get('gender'),
             birth_date=validated_data.get('birth_date')
         )
         return user
 
+    def validate(self, attrs):
+       email = attrs.get('email')
+       password1 = attrs.get('password1')
+       password2 = attrs.get('password2')
 
+       if User.objects.filter(email=email).exists():
+        raise serializers.ValidationError("Bu Email mavjud")
+
+
+       if password1 != password2:
+           raise serializers.ValidationError("Parollar bir-biriga mos kelishi kerak.")
+
+
+
+       return super().validate(attrs)
 class LoginSerializer(serializers.Serializer):
     phone_number = serializers.CharField()
     password = serializers.CharField(write_only=True)
