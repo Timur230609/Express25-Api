@@ -1,10 +1,15 @@
 from rest_framework import serializers
 from .models import Address,PlasticCard
-from accaunt.models import User
-from .models import PlasticCard
 from datetime import date
+from accaunt.models import User
+from accaunt.serializers import RegisterSerializer
 
+
+
+#user ni malumotlarini obyekt sifatida ko'ra olamiz
+#ma'lumot qo'shishda user_id sidan foydalanishimiz kerak
 class AddressSerializer(serializers.ModelSerializer):
+    user = RegisterSerializer()
     class Meta:
         model = Address
         fields =  "__all__"

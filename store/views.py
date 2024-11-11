@@ -7,7 +7,7 @@ class StoreDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = StoreSerializer
     queryset = Category
     lookup_field = 'id'
-  
+
 class StoreListAPIView(generics.ListCreateAPIView):
     queryset = Category.objects.filter(category_type='Store')
     serializer_class = StoreSerializer

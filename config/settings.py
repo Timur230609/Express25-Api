@@ -24,8 +24,6 @@ INSTALLED_APPS = [
     'dj_rest_auth',
     'django.contrib.sites',
     'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
     'dj_rest_auth.registration',
     'rest_framework.authtoken'
 ]
@@ -62,17 +60,29 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 AUTH_USER_MODEL = 'accaunt.User'
 
+# Set site ID for django-allauth
 SITE_ID = 1
 
-ACCOUNT_AUTHENTICATION_METHOD = 'username'
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_EMAIL_REQUIRED = False
+
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
-    ]
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ],
 }
+
+
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # Default
+]
+
+
+
+
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
