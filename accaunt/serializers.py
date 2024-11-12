@@ -1,6 +1,9 @@
 from django.contrib.auth import authenticate
 from rest_framework import serializers
 from .models import User
+from django.core.exceptions import ValidationError
+from django.core.validators import EmailValidator
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(write_only=True)
@@ -23,15 +26,25 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
        email = attrs.get('email')
+       phone_number = attrs.get('phone_number')
        password1 = attrs.get('password1')
        password2 = attrs.get('password2')
 
-       if User.objects.filter(email=email).exists():
-        raise serializers.ValidationError("Bu Email mavjud")
+       if not email:
+           raise serializers.ValidationError('Please enter an email address.')
+       try:
+            EmailValidator()(email)
+       except ValidationError:
+           raise serializers.ValidationError('Please enter a valid email address.')
 
+       if User.objects.filter(email=email).exists():
+        raise serializers.ValidationError("This email is already registered.")
+       
+       if not phone_number:
+           raise serializers.ValidationError('Please enter your phone number.')
 
        if password1 != password2:
-           raise serializers.ValidationError("Parollar bir-biriga mos kelishi kerak.")
+           raise serializers.ValidationError("Passwords must match.")
 
 
 
