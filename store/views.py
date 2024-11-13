@@ -55,5 +55,3 @@ class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProductSerializer
     lookup_field = 'id'
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-

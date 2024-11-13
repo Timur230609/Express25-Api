@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from .models import Address,PlasticCard
 from datetime import date
-from accaunt.models import User
 from accaunt.serializers import RegisterSerializer
 
 
@@ -9,13 +8,16 @@ from accaunt.serializers import RegisterSerializer
 #user ni malumotlarini obyekt sifatida ko'ra olamiz
 #ma'lumot qo'shishda user_id sidan foydalanishimiz kerak
 class AddressSerializer(serializers.ModelSerializer):
-    user = RegisterSerializer()
+    user = RegisterSerializer(read_only=True)
+    user_id = serializers.IntegerField(write_only=True)
     class Meta:
         model = Address
         fields =  "__all__"
 
 
 class PlasticCardSerializer(serializers.ModelSerializer):
+    user = RegisterSerializer(read_only=True)
+    user_id = serializers.IntegerField(write_only=True)
     class Meta:
         model = PlasticCard
         fields =  "__all__"

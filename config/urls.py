@@ -21,9 +21,12 @@ schema_view = get_schema_view(
 )
 urlpatterns = [
     path('admin/', admin.site.urls),
+
     path('api/v1/store/',include('store.urls'),name='store-api' ),
 
     path('api/v1/delivery/',include('delivery.urls')),
+    path('api/auth/users/',include("common.urls")),
+
     path('api/auth/register/', RegisterView.as_view(), name='register'),
     path('api/auth/login/', LoginView.as_view(), name='login'),
     path('api/auth/logout/', LogoutView.as_view(), name='logout'),
