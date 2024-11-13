@@ -40,7 +40,10 @@ class CustomUserManager(BaseUserManager):
         return self._create_user(email, phone_number, password, is_courier, gender, birth_date, **extra_fields)
 
 class User(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(db_index=True, unique=True, max_length=254)
+    first_name = models.CharField(max_length=30, blank=True, null=True)
+    last_name = models.CharField(max_length=30, blank=True, null=True)
+    email = models.EmailField(db_index=True, unique=True, max_length=254, blank=True, null=True)
+
     phone_number = models.CharField(max_length=15, unique=True)
     is_courier = models.BooleanField(default=False)
     gender = models.CharField(max_length=10, choices=[('M', 'Male'), ('F', 'Female')], blank=True, null=True)  # Add null=True and blank=True
