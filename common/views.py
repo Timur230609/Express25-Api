@@ -1,6 +1,6 @@
 from rest_framework import generics,permissions
-from .serializers import AddressSerializer,PlasticCardSerializer
-from .models import Address,PlasticCard
+from .serializers import AddressSerializer, PlasticCardSerializer
+from .models import Address, PlasticCard
 
 class AddressDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = AddressSerializer

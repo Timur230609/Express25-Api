@@ -2,7 +2,7 @@ from django.shortcuts import redirect
 from store.models import Category, Subcategory, Product,Restaurant  
 from rest_framework import generics, permissions
 from store.serializers import StoreSerializer, SubcategorySerializer, ProductSerializer,RestaurantSerializer
-
+from store.paginator import StorePaginator
 # store
 class StoreDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = StoreSerializer
@@ -13,6 +13,7 @@ class StoreListAPIView(generics.ListCreateAPIView):
     queryset = Category.objects.filter(category_type='Store')
     serializer_class = StoreSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    pagination_class=StorePaginator
     
     # restaurant
 class RestaurantListCreateAPIView(generics.ListCreateAPIView):
@@ -31,7 +32,7 @@ class CategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = StoreSerializer
     lookup_field = 'id'
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
+    
 # subcategory
 class SubcategoryListCreateAPIView(generics.ListCreateAPIView):
     queryset = Subcategory.objects.all()
