@@ -17,8 +17,6 @@ class StoreSerializer(serializers.ModelSerializer):
         phone_number = data.get("phone_number")
         if Category.objects.filter(phone_number=phone_number):
             raise serializers.ValidationError("Bu telefon nomerdan Dokon yaratilgan")
-
-
         return super().validate(data)
     
 
@@ -30,8 +28,7 @@ class StoreSerializer(serializers.ModelSerializer):
     
     
     
-    
-    
+   
 class SubcategorySerializer(serializers.ModelSerializer):
     category_name = serializers.ReadOnlyField(source='category.name')  
     category_id = serializers.IntegerField(write_only=True)
