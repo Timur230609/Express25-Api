@@ -1,33 +1,27 @@
-from rest_framework import generics,permissions
-from .serializers import AddressSerializer,PlasticCardSerializer
-from .models import Address,PlasticCard
+from rest_framework import viewsets, permissions
+from .models import Address, PlasticCard
+from .serializers import AddressSerializer, PlasticCardSerializer
 
-class AddressDetailView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = AddressSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    queryset = Address
-    lookup_field = 'id'
 
-class AddressListAPIView(generics.ListCreateAPIView):
+class AddressViewSet(viewsets.ModelViewSet):
     queryset = Address.objects.all()
     serializer_class = AddressSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-
-class PlasticCardDetailView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = PlasticCardSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    queryset = PlasticCard
-    lookup_field = 'id'
     def get_queryset(self):
-        return PlasticCard.objects.filter(user=self.request.user) 
+        return Address.objects.filter(user=self.request.user)  # Filter by logged-in user
 
-    
-class PlasticCardListAPIView(generics.ListCreateAPIView):
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)  # Save with the logged-in user
+
+
+class PlasticCardViewSet(viewsets.ModelViewSet):
     queryset = PlasticCard.objects.all()
-    permission_classes = [permissions.IsAuthenticated]
     serializer_class = PlasticCardSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return PlasticCard.objects.filter(user=self.request.user)    
-    
+        return PlasticCard.objects.filter(user=self.request.user)  # Filter by logged-in user
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)  # Save with the logged-in user
