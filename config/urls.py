@@ -37,6 +37,7 @@ urlpatterns = [
     path('api/v1/store/',include('store.urls'),name='store-api' ),
     path('api/v1/delivery/',include('delivery.urls')),
     
+
     path('addresses/<int:pk>/', AddressViewSet.as_view({'get': 'retrieve'}), name='address-detail'),
     path('plastic-cards/<int:pk>/', PlasticCardViewSet.as_view({'get': 'retrieve'}), name='plastic-card-detail'),
 
