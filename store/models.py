@@ -114,6 +114,7 @@ def clean(self):
 class Restaurant(models.Model):
     name = models.CharField(_("Nomi"), max_length=255)
     description = models.TextField(_("Tavsif"), blank=True, null=True)
+    cuisine = models.CharField(max_length=255)
     address = models.ForeignKey(
         "common.Address", 
         on_delete=models.CASCADE, 
@@ -155,3 +156,13 @@ class Restaurant(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+class Store(models.Model):
+    name = models.CharField(max_length=255)
+    address = models.TextField()
+    description = models.TextField()
+
+    def __str__(self):
+        return self.name    
+    
